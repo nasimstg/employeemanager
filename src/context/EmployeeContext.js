@@ -5,13 +5,12 @@ export const EmployeeContext = createContext();
 export const EmployeeProvider = ({ children }) => {
   const [employees, setEmployees] = useState(() => {
     const savedEmployees = localStorage.getItem('employees');
-    return savedEmployees ? new Map(JSON.parse(savedEmployees)) : new Map();
+    return savedEmployees ? JSON.parse(savedEmployees) : [];
   });
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const employeesArray = Array.from(employees.entries());
-    localStorage.setItem('employees', JSON.stringify(employeesArray));
+    localStorage.setItem('employees', JSON.stringify(employees));
   }, [employees]);
 
   const fetchEmployees = async (company = 'google') => {
@@ -21,7 +20,12 @@ export const EmployeeProvider = ({ children }) => {
         throw new Error('Failed to fetch employees');
       }
       const data = await response.json();
-      setEmployees(prevEmployees => new Map(prevEmployees).set(company, data.results));
+      const updatedEmployees = data.results.map((employee, index) => ({
+        company,
+        index,
+        details: employee
+      }));
+      setEmployees(updatedEmployees);
     } catch (error) {
       setError(error.message);
     }

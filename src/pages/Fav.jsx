@@ -8,8 +8,8 @@ const Fav = () => {
     useEffect(() => {
         const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         setFav(favorites);
-        document.title = 'Favorites | EmployeeFinder';
-    }, []);
+        document.title = 'Favorites - EmployeeManager';
+    }, [fav]);
 
 
     return (
@@ -18,7 +18,7 @@ const Fav = () => {
                 <ul className='flex flex-wrap gap-5 justify-center items-center'>
                     {(fav.length === 0) && <p>No favorites yet</p>}
                     {(fav.length > 0) && fav.map(e => (
-                        <EmployeeCard key={e.employee?.login?.uuid} employee={e.employee} company={e.company} index={e.index} />
+                        <Card key={e.employee?.login?.uuid} employee={e.employee} company={e.company} index={e.index} />
                     ))}
                 </ul>
             </div>
